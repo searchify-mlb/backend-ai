@@ -1,7 +1,7 @@
 from langchain_community.vectorstores.utils import DistanceStrategy
 from langchain_community.vectorstores import BigQueryVectorSearch
 from langchain_google_vertexai import VertexAIEmbeddings
-from config import PROJECT_ID, REGION, DEST_DATASET, DEST_TABLE, EMBEDDING_MODEL
+from app.machine_learning.src.config import PROJECT_ID, REGION, DEST_DATASET, DEST_TABLE, EMBEDDING_MODEL
 
 def init_vector_store():
     """Initialize the vector store with embeddings"""

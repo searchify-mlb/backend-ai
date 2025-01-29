@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from app.db.connection import init_db
 from app.user.routes import router as user_router
+from app.search.routes import router as search_router
 import logging
 
 logging.basicConfig(level=logging.INFO)
@@ -15,6 +16,7 @@ app = FastAPI(lifespan=init_db)
 
 # Include the router each domain
 app.include_router(user_router)
+app.include_router(search_router)
 
 @app.get("/")
 async def root():
