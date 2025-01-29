@@ -1,2 +1,7 @@
 .env
 .idea
+mlb-hacks-sa.json
+.venv
+__pycache__/
+*.py[cod]
+*.DS_Store
