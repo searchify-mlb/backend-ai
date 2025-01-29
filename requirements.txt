@@ -6,3 +6,7 @@ pandas==2.2.3
 numpy==1.26.4
 fastapi==0.115.7
 asyncpg==0.30.0
+uvicorn
+PyJWT==2.8.0
+email-validator==2.1.0
+python-dotenv

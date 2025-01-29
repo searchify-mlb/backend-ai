@@ -1,0 +1,53 @@
+name: Deploy to Compute Engine
+
+on:
+  push:
+    branches:
+      - main
+
+
+jobs:
+  build_and_push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the repo
+        uses: actions/checkout@v2
+          
+      - name: Login to Dockerhub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      
+      - name: Build and push Docker image
+        run: |
+          docker build -t qais004/fastapi-backend:latest .
+          docker push qais004/fastapi-backend:latest
+      
+      - name: Deploy to Compute Engine
+        uses: appleboy/ssh-action@master
+        env:
+            DB_HOST: ${{ secrets.DB_HOST }}
+            DB_USER: ${{ secrets.DB_USER }}
+            DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+            GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
+        with:
+          host: ${{ secrets.VPS_IP }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_PK }}
+          envs: DB_HOST, DB_USER, DB_PASSWORD, GOOGLE_APPLICATION_CREDENTIALS
+          script: |
+            docker pull qais004/fastapi-backend:latest
+            docker stop fastapi-backend
+            docker rm fastapi-backend
+            docker run -d \
+            --name fastapi-backend \
+            -p 8000:8000 \
+            -e DB_HOST="$DB_HOST" \
+            -e DB_PORT="5432" \
+            -e DB_USER="$DB_USER" \
+            -e DB_PASSWORD="$DB_PASSWORD" \
+            -e DB_NAME="mlb" \
+            -e GOOGLE_APPLICATION_CREDENTIALS="$GOOGLE_APPLICATION_CREDENTIALS" \
+            -v /home/qaisjabbar004/mlb-hacks-sa.json:/app/mlb-hacks-sa.json \
+            qais004/fastapi-backend
