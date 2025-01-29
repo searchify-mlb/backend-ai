@@ -31,11 +31,12 @@ jobs:
             DB_USER: ${{ secrets.DB_USER }}
             DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
             GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
+            GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         with:
           host: ${{ secrets.VPS_IP }}
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_PK }}
-          envs: DB_HOST, DB_USER, DB_PASSWORD, GOOGLE_APPLICATION_CREDENTIALS
+          envs: DB_HOST, DB_USER, DB_PASSWORD, GOOGLE_APPLICATION_CREDENTIALS, GEMINI_API_KEY
           script: |
             docker pull qais004/fastapi-backend:latest
             docker stop fastapi-backend
@@ -49,5 +50,6 @@ jobs:
             -e DB_PASSWORD="$DB_PASSWORD" \
             -e DB_NAME="mlb" \
             -e GOOGLE_APPLICATION_CREDENTIALS="$GOOGLE_APPLICATION_CREDENTIALS" \
+            -e GEMINI_API_KEY="$GEMINI_API_KEY" \
             -v /home/qaisjabbar004/mlb-hacks-sa.json:/app/mlb-hacks-sa.json \
             qais004/fastapi-backend
