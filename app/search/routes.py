@@ -1,4 +1,4 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Header
 from app.search.services import search as search_service
 import logging
 
@@ -7,10 +7,8 @@ logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/search", tags=["Search"])
 
 @router.get("/{query}")
-async def search(query: str):
+async def search(query: str, authorization: str = Header(...)):
     try:
-        logger.info(f"search route called {query}")
-
         result = await search_service(query)
 
         return {"message": "Search successful", "result": result}

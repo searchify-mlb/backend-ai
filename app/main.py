@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from app.db.connection import init_db
 from app.user.routes import router as user_router
 from app.search.routes import router as search_router
@@ -13,6 +14,14 @@ async def lifespan(app: FastAPI):
         yield
 
 app = FastAPI(lifespan=init_db)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Open to all origins
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Include the router each domain
 app.include_router(user_router)
